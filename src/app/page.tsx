@@ -179,7 +179,11 @@ export default function Home() {
         </div>
         <div className="text-center text-sm italic text-grey dark:text-white md:text-md">
           GitHub:{" "}
-          <Link href={"https://github.com/Ty-Sir"} target="_blank" rel="noopenner noreferrer">
+          <Link
+            href={"https://github.com/Ty-Sir/megamillions-picker"}
+            target="_blank"
+            rel="noopenner noreferrer"
+          >
             Ty-Sir
           </Link>
         </div>
@@ -187,42 +191,3 @@ export default function Home() {
     </main>
   );
 }
-
-// const getNums = () => {
-//   const counts: { [key: string]: { [value: string]: number } } = {};
-//   for (const obj of MEGAMILLIONS_WINNERS) {
-//     for (const [key, value] of Object.entries(obj)) {
-//       if (key === "Date") {
-//         continue;
-//       }
-//       if (!counts[key]) {
-//         counts[key] = {};
-//       }
-//       if (value in counts[key]) {
-//         counts[key][value]++;
-//       } else {
-//         counts[key][value] = 1;
-//       }
-//     }
-//   }
-
-//   const most_common: { [key: string]: string } = {};
-//   for (const [key, value_counts] of Object.entries(counts)) {
-//     if (key === "Date") {
-//       continue;
-//     }
-//     most_common[key] = Object.keys(value_counts).reduce((a, b) =>
-//       value_counts[a] > value_counts[b] ? a : b
-//     );
-//   }
-//   setRandomNumbers((prevState) => ({
-//     ...prevState,
-//     Num1: most_common["Num1"],
-//     Num2: most_common["Num2"],
-//     Num3: most_common["Num3"],
-//     Num4: most_common["Num4"],
-//     Num5: most_common["Num5"],
-//     PowerNum: most_common["PowerNum"],
-//   }));
-//   console.log(most_common);
-// };
