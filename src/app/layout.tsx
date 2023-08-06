@@ -8,10 +8,30 @@ import { Gradient } from "./components/Gradient";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://megamillions-picker.vercel.app/"),
+
   title: "MegaMillions Picker",
-  description: "A MegaMillions number picker",
-  // url: "https://megamillions-picker.vercel.app/",
-  // image: "https://megamillions-picker.vercel.app/logo.png",
+  description: "A MegaMillions Number Picker",
+  keywords:
+    "MegaMillions, lottery, jackpot, number generator, winning numbers, lucky numbers, odds, probability, random, quick pick, powerball, millionaire, cash prize, ticket, drawing, play, chance, strategy, analysis, results",
+  openGraph: {
+    type: "website",
+    url: "https://megamillions-picker.vercel.app/",
+    title: "MegaMillions Picker",
+    description: "A MegaMillions Number Picker",
+    siteName: "MegaMillions Picker",
+    images: [
+      {
+        url: "/logo.png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@site",
+    creator: "@creator",
+    images: "/logo.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
