@@ -150,7 +150,7 @@ export default function Home() {
         >
           <div className="flex flex-col max-w-[350px]">
             <SectionTitle title="Most Common Within Range" />
-            <Subtitle title="Select A Date Range And Generate Numbers From Winning Numbers Within Range" />
+            <Subtitle title="Select A Date Range And Get Most Comming Winning Numbers" />
           </div>
 
           <DateRangePicker
