@@ -125,7 +125,7 @@ export default function Home() {
             <SectionTitle title="Most Common Winning Numbers" />
             <Subtitle title="2/2/2010 - 8/4/2023" />
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {Object.entries(MOST_COMMON).map(([key, value]) => (
               <Ball key={key} value={value} isPowerBall={key === "PowerNum"} />
             ))}
@@ -138,7 +138,7 @@ export default function Home() {
             <SectionTitle title="Number Picker" />
             <Subtitle title="Random Numbers Chosen From Winning Numbers 2/2/2010 - 8/4/2023" />
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {Object.entries(randomNumbers).map(([key, value]) => (
               <Ball key={key} value={value} isPowerBall={key === "PowerNum"} />
             ))}
@@ -162,7 +162,7 @@ export default function Home() {
             direction="horizontal"
             inputRanges={[]}
           />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {Object.entries(mostCommon).map(([key, value]) => (
               <Ball key={key} value={value} isPowerBall={key === "PowerNum"} />
             ))}
