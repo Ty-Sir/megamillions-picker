@@ -1,113 +1,228 @@
-import Image from 'next/image'
+"use client";
+import { MEGAMILLIONS_WINNERS } from "@/data/megamillions-winners";
+import { DateRangePicker, RangeKeyDict } from "react-date-range";
+import { useState } from "react";
+import { SectionTitle } from "./components/SectionTitle";
+import { FilledButton } from "./components/FilledButton";
+import { Ball } from "./components/Ball";
+import { Subtitle } from "./components/Subtitle";
+import Link from "next/link";
+import { Logo } from "./components/Logo";
+
+const MOST_COMMON = {
+  Num1: "2",
+  Num2: "15",
+  Num3: "31",
+  Num4: "46",
+  Num5: "70",
+  PowerNum: "9",
+};
 
 export default function Home() {
+  const [selectionRange, setSelectionRange] = useState({
+    startDate: new Date("2022-01-01"),
+    endDate: new Date(),
+    key: "selection",
+  });
+  const [randomNumbers, setRandomNumbers] = useState({
+    Num1: "",
+    Num2: "",
+    Num3: "",
+    Num4: "",
+    Num5: "",
+    PowerNum: "",
+  });
+  const [mostCommon, setMostCommon] = useState({
+    Num1: "",
+    Num2: "",
+    Num3: "",
+    Num4: "",
+    Num5: "",
+    PowerNum: "",
+  });
+
+  const chooseRandomNumbers = (): void => {
+    const randomIndex = Math.floor(Math.random() * MEGAMILLIONS_WINNERS.length);
+    const randomObj = MEGAMILLIONS_WINNERS[randomIndex];
+    const randomNumbers: { [key: string]: string } = {};
+    randomNumbers.Num1 = randomObj.Num1;
+    randomNumbers.Num2 = randomObj.Num2;
+    randomNumbers.Num3 = randomObj.Num3;
+    randomNumbers.Num4 = randomObj.Num4;
+    randomNumbers.Num5 = randomObj.Num5;
+    randomNumbers.PowerNum = randomObj.PowerNum;
+    setRandomNumbers({
+      Num1: randomNumbers.Num1,
+      Num2: randomNumbers.Num2,
+      Num3: randomNumbers.Num3,
+      Num4: randomNumbers.Num4,
+      Num5: randomNumbers.Num5,
+      PowerNum: randomNumbers.PowerNum,
+    });
+  };
+
+  const findMostCommonValues = (startDate: Date, endDate: Date): void => {
+    const counts: { [key: string]: { [value: string]: number } } = {};
+    for (const obj of MEGAMILLIONS_WINNERS) {
+      const date = new Date(obj.Date);
+      if (date >= startDate && date <= endDate) {
+        for (const [key, value] of Object.entries(obj)) {
+          if (key === "Date") {
+            continue;
+          }
+          if (!counts[key]) {
+            counts[key] = {};
+          }
+          if (value in counts[key]) {
+            counts[key][value]++;
+          } else {
+            counts[key][value] = 1;
+          }
+        }
+      }
+    }
+
+    const most_common: { [key: string]: string } = {};
+    for (const [key, value_counts] of Object.entries(counts)) {
+      if (key === "Date") {
+        continue;
+      }
+      most_common[key] = Object.keys(value_counts).reduce((a, b) =>
+        value_counts[a] > value_counts[b] ? a : b
+      );
+    }
+    setMostCommon({
+      Num1: most_common["Num1"],
+      Num2: most_common["Num2"],
+      Num3: most_common["Num3"],
+      Num4: most_common["Num4"],
+      Num5: most_common["Num5"],
+      PowerNum: most_common["PowerNum"],
+    });
+  };
+
+  const handleDateSelect = (ranges: RangeKeyDict): void => {
+    setSelectionRange({
+      startDate: new Date(ranges?.selection?.startDate as Date),
+      endDate: new Date(ranges?.selection?.endDate as Date),
+      key: "selection",
+    });
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="flex min-h-[100dvh] max-w-5xl mx-auto flex-col items-center pt-10 w-full px-4 z-10">
+      <div className="flex flex-col gap-2 justify-center items-center">
+        <Logo />
+        <div className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
+          MegaMillions Picker
         </div>
       </div>
+      <div className="flex min-h-screen flex-col items-center w-full gap-8 pt-10">
+        <section
+          className={`border-stroke gap-4 w-full flex items-center flex-col overflow-hidden rounded-md border bg-white py-4 dark:border-grey dark:bg-black`}
+        >
+          <div className="flex flex-col max-w-[350px]">
+            <SectionTitle title="Most Common Winning Numbers" />
+            <Subtitle title="2/2/2010 - 8/4/2023" />
+          </div>
+          <div className="flex items-center gap-4">
+            {Object.entries(MOST_COMMON).map(([key, value]) => (
+              <Ball key={key} value={value} isPowerBall={key === "PowerNum"} />
+            ))}
+          </div>
+        </section>
+        <section
+          className={`border-stroke gap-4 w-full flex items-center flex-col overflow-hidden rounded-md border bg-white py-4 dark:border-grey dark:bg-black`}
+        >
+          <div className="flex flex-col max-w-[350px]">
+            <SectionTitle title="Number Picker" />
+            <Subtitle title="Random Numbers Chosen From Winning Numbers 2/2/2010 - 8/4/2023" />
+          </div>
+          <div className="flex items-center gap-4">
+            {Object.entries(randomNumbers).map(([key, value]) => (
+              <Ball key={key} value={value} isPowerBall={key === "PowerNum"} />
+            ))}
+          </div>
+          <FilledButton text="Get Numbers" onClick={chooseRandomNumbers} />
+        </section>
+        <section
+          className={`border-stroke gap-4 w-full flex items-center flex-col overflow-hidden rounded-md border bg-white py-4 dark:border-grey dark:bg-black`}
+        >
+          <div className="flex flex-col max-w-[350px]">
+            <SectionTitle title="Most Common Within Range" />
+            <Subtitle title="Select A Date Range And Generate Numbers From Winning Numbers Within Range" />
+          </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+          <DateRangePicker
+            ranges={[selectionRange]}
+            onChange={handleDateSelect}
+            staticRanges={[]}
+            minDate={new Date("2/2/2010")}
+            maxDate={new Date()}
+            direction="horizontal"
+            inputRanges={[]}
+          />
+          <div className="flex items-center gap-4">
+            {Object.entries(mostCommon).map(([key, value]) => (
+              <Ball key={key} value={value} isPowerBall={key === "PowerNum"} />
+            ))}
+          </div>
+          <FilledButton
+            text="Get Most Common"
+            onClick={() => findMostCommonValues(selectionRange.startDate, selectionRange.endDate)}
+          />
+        </section>
       </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <footer className="px-4 py-10 flex flex-col">
+        <div className="text-center text-sm italic text-grey dark:text-white md:text-md">
+          &copy; {new Date().getFullYear()}
+        </div>
+        <div className="text-center text-sm italic text-grey dark:text-white md:text-md">
+          GitHub:{" "}
+          <Link href={"https://github.com/Ty-Sir"} target="_blank" rel="noopenner noreferrer">
+            Ty-Sir
+          </Link>
+        </div>
+      </footer>
     </main>
-  )
+  );
 }
+
+// const getNums = () => {
+//   const counts: { [key: string]: { [value: string]: number } } = {};
+//   for (const obj of MEGAMILLIONS_WINNERS) {
+//     for (const [key, value] of Object.entries(obj)) {
+//       if (key === "Date") {
+//         continue;
+//       }
+//       if (!counts[key]) {
+//         counts[key] = {};
+//       }
+//       if (value in counts[key]) {
+//         counts[key][value]++;
+//       } else {
+//         counts[key][value] = 1;
+//       }
+//     }
+//   }
+
+//   const most_common: { [key: string]: string } = {};
+//   for (const [key, value_counts] of Object.entries(counts)) {
+//     if (key === "Date") {
+//       continue;
+//     }
+//     most_common[key] = Object.keys(value_counts).reduce((a, b) =>
+//       value_counts[a] > value_counts[b] ? a : b
+//     );
+//   }
+//   setRandomNumbers((prevState) => ({
+//     ...prevState,
+//     Num1: most_common["Num1"],
+//     Num2: most_common["Num2"],
+//     Num3: most_common["Num3"],
+//     Num4: most_common["Num4"],
+//     Num5: most_common["Num5"],
+//     PowerNum: most_common["PowerNum"],
+//   }));
+//   console.log(most_common);
+// };
