@@ -113,7 +113,7 @@ export default function Home() {
     <main className="flex min-h-[100dvh] max-w-5xl mx-auto flex-col items-center pt-10 w-full px-4 z-10">
       <div className="flex flex-col gap-2 justify-center items-center">
         <Logo />
-        <div className="flex flex-col max-w-[350px]">
+        <div className="flex flex-col max-w-[400px]">
           <div className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
             MegaMillions Picker
           </div>
