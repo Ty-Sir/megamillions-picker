@@ -113,11 +113,29 @@ export default function Home() {
     <main className="flex min-h-[100dvh] max-w-5xl mx-auto flex-col items-center pt-10 w-full px-4 z-10">
       <div className="flex flex-col gap-2 justify-center items-center">
         <Logo />
-        <div className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
-          MegaMillions Picker
+        <div className="flex flex-col max-w-[350px]">
+          <div className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
+            MegaMillions Picker
+          </div>
+          <Subtitle
+            title={
+              <div>
+                <span>Uses data scraped from </span>
+                <Link
+                  href="https://www.megamillions.com/Winning-Numbers/Previous-Drawings.aspx"
+                  target="_blank"
+                  className="underline"
+                  rel="noopenner noreferrer"
+                >
+                  MegaMillions previous winning numbers
+                </Link>
+                <span> to generate numbers to play in the lottery.</span>
+              </div>
+            }
+          />
         </div>
       </div>
-      <div className="flex min-h-screen flex-col items-center w-full gap-8 pt-10">
+      <div className="flex min-h-screen flex-col items-center w-full gap-8 pt-8">
         <section
           className={`border-stroke gap-4 w-full flex items-center flex-col overflow-hidden rounded-md border bg-white py-4 dark:border-grey dark:bg-black`}
         >
@@ -186,6 +204,9 @@ export default function Home() {
           >
             Ty-Sir
           </Link>
+        </div>
+        <div className="text-center text-sm italic text-grey dark:text-white md:text-md">
+          Disclaimer: For entertainment purposes only. Not responsible for any losses.
         </div>
       </footer>
     </main>
